@@ -10,6 +10,6 @@ final class MobileDownloadDecoderTests: XCTestCase {
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testExample1", testExample),
     ]
 }
