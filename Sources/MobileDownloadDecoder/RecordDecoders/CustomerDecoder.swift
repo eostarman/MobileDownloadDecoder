@@ -261,7 +261,8 @@ extension CustomerRecord {
 
         liquorLicenseTo = record.getString()
 
-        retailerInfoBlob = record.getString()
+        let retailerInfoBlob = record.getString()
+        retailerInfo = RetailerInfoDecoder.decodeCustomerRetailerInfo(retailerInfoBlob: retailerInfoBlob)
 
         useSecondaryContainerDeposits = record.getBool()
 

@@ -23,10 +23,6 @@ public struct MobileDownloadDecoder {
         var records: [[String]]
     }
 
-    public static func decodeCustomerRetailerInfo(customer: CustomerRecord) -> RetailerInfo {
-        RetailerInfoDecoder.decodeCustomerRetailerInfo(customer: customer)
-    }
-
     public static func decodeMobileDownload(_ fileUrl: URL, _ databaseSource: MobileDownload.DatabaseSource) -> MobileDownload {
         let md = MobileDownload()
 
@@ -143,6 +139,11 @@ public struct MobileDownloadDecoder {
         if !customerRetailPlanogramsSection.isEmpty { print("Mobiledownload ERROR for \(databaseName): not decoding customerRetailPlanogramsSection") }
         if !displayLocationsSection.isEmpty { print("Mobiledownload ERROR for \(databaseName): not decoding displayLocationsSection") }
         if !displayLocationSurveysSection.isEmpty { print("Mobiledownload ERROR for \(databaseName): not decoding displayLocationSurveysSection") }
+
+        // some of the information in each customer's retailerInfo object requires info from mobileDownload.retailerListTypes
+        for customer in md.customers.getAll() {
+            customer.retailerInfo.fixup(mobileDownload: md)
+        }
 
         return md
     }

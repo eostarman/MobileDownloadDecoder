@@ -47,9 +47,8 @@ struct RetailerInfoDecoder {
         var date: Date? { Date.fromDownloadedDate(string) }
     }
 
-    static func decodeCustomerRetailerInfo(customer: CustomerRecord) -> RetailerInfo {
-        let blob = customer.retailerInfoBlob
-        if blob.isEmpty {
+    static func decodeCustomerRetailerInfo(retailerInfoBlob: String) -> RetailerInfo {
+        if retailerInfoBlob.isEmpty {
             return RetailerInfo()
         }
 
@@ -59,7 +58,7 @@ struct RetailerInfoDecoder {
         var item = RetailerList.Item()
         var itemNote = RetailerList.ItemNote()
 
-        for myToken in getTokens(blob: blob) {
+        for myToken in getTokens(blob: retailerInfoBlob) {
             switch myToken.token {
             case .RetailerItemNote_EraseWhenPostingToSQL:
                 itemNote.eraseWhenPostingToSQL = true
@@ -80,10 +79,12 @@ struct RetailerInfoDecoder {
             case .EraseWhenPostingToSQL:
                 list.eraseWhenPostingToSQL = true
             case .RetailerListTypeNid:
-                let retailerListType = mobileDownload.retailerListTypes[myToken.integer]
-                list.retailerListTypeNid = retailerListType.recNid
-                list.retailerListCategory = retailerListType.retailerListCategory
-                list.retailerListTypeRecName = retailerListType.recName
+                list.retailerListTypeNid = myToken.integer
+
+                // defer to the fixup() routine (since mobileDownload isn't fully decoded yet)
+                // let retailerListType = mobileDownload.retailerListTypes[myToken.integer]
+                // list.retailerListCategory = retailerListType.retailerListCategory
+                // list.retailerListTypeRecName = retailerListType.recName
 
             case .DisplaySequence:
                 list.displaySequence = myToken.integer
@@ -139,33 +140,6 @@ struct RetailerInfoDecoder {
             }
         }
 
-        // mpr: I think we can get rid of a lot of this (it's lifted from c# RetailerInfo.cs)
-        for list in retailerInfo.retailLocations + retailerInfo.backstockLocations + retailerInfo.productLists {
-            list.cusNid = retailerInfo.cusNid
-
-            var sectionNumber = 0
-            for section in list.sections {
-                section.sectionNumber = sectionNumber
-                section.cusNid = retailerInfo.cusNid
-                section.retailerListTypeNid = list.retailerListTypeNid
-                sectionNumber += 1
-
-                var itemDisplaySequence = 0
-                for item in section.items {
-                    item.displaySequence = itemDisplaySequence
-                    item.cusNid = retailerInfo.cusNid
-                    item.retailerListTypeNid = list.retailerListTypeNid
-                    item.sectionNumber = section.sectionNumber
-
-                    itemDisplaySequence += 1
-                }
-            }
-        }
-
-        // now, do a bit of "cleanup" - c#: GetRetailInfoCleanedUpAfterFromBlob()
-        for note in retailerInfo.itemNotes {
-            note.cusNid = retailerInfo.cusNid
-        }
 
         return retailerInfo
     }
@@ -210,5 +184,44 @@ struct RetailerInfoDecoder {
         }
 
         return tokens
+    }
+}
+
+extension RetailerInfo {
+
+    func fixup(mobileDownload: MobileDownload) {
+
+        // mpr: I think we can get rid of a lot of this (it's lifted from c# RetailerInfo.cs)
+        for list in allRetailAndBackstockLocations {
+            list.cusNid = cusNid
+
+            let retailerListType = mobileDownload.retailerListTypes[list.retailerListTypeNid]
+
+            list.retailerListCategory = retailerListType.retailerListCategory
+            list.retailerListTypeRecName = retailerListType.recName
+
+            var sectionNumber = 0
+            for section in list.sections {
+                section.sectionNumber = sectionNumber
+                section.cusNid = cusNid
+                section.retailerListTypeNid = list.retailerListTypeNid
+                sectionNumber += 1
+
+                var itemDisplaySequence = 0
+                for item in section.items {
+                    item.displaySequence = itemDisplaySequence
+                    item.cusNid = cusNid
+                    item.retailerListTypeNid = list.retailerListTypeNid
+                    item.sectionNumber = section.sectionNumber
+
+                    itemDisplaySequence += 1
+                }
+            }
+        }
+
+        // now, do a bit of "cleanup" - c#: GetRetailInfoCleanedUpAfterFromBlob()
+        for note in itemNotes {
+            note.cusNid = cusNid
+        }
     }
 }
