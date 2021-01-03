@@ -29,6 +29,25 @@ final class MobileDownloadDecoderTests: XCTestCase {
     //        }
     //    }
 
+    func testCasesPerLayerParserEmpty() {
+        XCTAssertNil(ItemRecord.decodeCasesPerLayerEntries(blob: ""))
+        XCTAssertNil(ItemRecord.decodeCasesPerLayerEntries(blob: " "))
+    }
+
+    func testCasesPerLayerParser() {
+        let blob = "2,7;10,10"
+
+        let entries = ItemRecord.decodeCasesPerLayerEntries(blob: blob)
+        XCTAssertNotNil(entries)
+
+        XCTAssertEqual(entries!.count, 2)
+
+        let firstEntry = entries!.first!
+
+        XCTAssertEqual(firstEntry.palletSizeNid, 2)
+        XCTAssertEqual(firstEntry.casesPerLayer, 7)
+    }
+
     func testWarehouseCanSellService() {
         let sellableAltPackFamilyNids = [1001]
         let altPackFamilyNidsByItemNid = [101: 1001, 102: 1001]

@@ -117,7 +117,7 @@ extension ItemRecord {
         closeDateLevel = record.getInt(63)
         dateCodeLabelFormat = eDateCodeLabelFormat(rawValue: record.getInt(64)) ?? .None
         casesPerLayer = record.getInt(65)
-        casesPerLayerEntries = Self.getCasesPerLayerEntries(blob: record.getString(66))
+        casesPerLayerEntries = Self.decodeCasesPerLayerEntries(blob: record.getString(66))
         litersPerCase = record.getScaledDouble(67, scale: 10000)
         addedTime = record.getDateOrNil(68)
         length = record.getScaledDouble(69, scale: 100)
@@ -144,4 +144,25 @@ extension ItemRecord {
             litersPerCase = gallonsPerCase * 3.78541 // GallonsPerCase will always be populated, but risks rounding/conversion error.
         }
     }
+    /// Decode the download "blob" of entries - "2,7;10,10" means if palletSizeNid==2, then qtyPerLayer=7; if palletSizeNid==10 then qtyPerLayer = 10
+    static func decodeCasesPerLayerEntries(blob: String) -> [CasesPerLayer]? {
+        if blob.isEmpty {
+            return nil
+        }
+
+        var entries: [CasesPerLayer] = []
+        for entry in blob.components(separatedBy: ";") {
+            let pair = entry.components(separatedBy: ",")
+            if pair.count == 2, let palletSizeNid = Int(pair[0]), palletSizeNid > 0, let casesPerLayer = Int(pair[1]) {
+                entries.append(CasesPerLayer(palletSizeNid: palletSizeNid, casesPerLayer: casesPerLayer))
+            }
+        }
+
+        if entries.isEmpty {
+            return nil
+        }
+
+        return entries
+    }
+
 }
