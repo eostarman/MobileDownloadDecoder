@@ -13,7 +13,7 @@ extension PriceSheetRecord {
         recName = record.getString(2)
         priceBookNid = record.getRecNidOrZero(3)
         startDate = record.getDateOrNil(4) ?? .distantPast
-        endDate = record.getDateOrNil(5) ?? .distantFuture
+        endDate = record.getDateOrNil(5)
         perCategoryMinimums = record.getBool(6)
         perItemMinimums = record.getBool(7)
         perPriceSheetMinimums = record.getBool(8)

@@ -140,12 +140,29 @@ public struct MobileDownloadDecoder {
         if !displayLocationsSection.isEmpty { print("Mobiledownload ERROR for \(databaseName): not decoding displayLocationsSection") }
         if !displayLocationSurveysSection.isEmpty { print("Mobiledownload ERROR for \(databaseName): not decoding displayLocationSurveysSection") }
 
-        // some of the information in each customer's retailerInfo object requires info from mobileDownload.retailerListTypes
+        fixup(md: md)
+
+        return md
+    }
+
+    /// After decoding the downloaded data, I make a pass to "fixup" some of the properties in the downloaded records (e.g. price sheets are assigned to price books and price books define the currency for
+    /// all of their related price sheets. During pricing, it's more convenient to access the price sheet's currency directly (without needing to look up its price book)
+    /// - Parameter md: <#md description#>
+    private static func fixup(md: MobileDownload) {
+
+        // some of the information in each customer's retailerInfo object requires info from mobileDownload.retailerListTypes (e.g. which retail locations are
+        // retail or back-stock is based on their retailerListTypes, but it's more convenient to have this flag in the location itself.
         for customer in md.customers.getAll() {
             customer.retailerInfo.fixup(mobileDownload: md)
         }
 
-        return md
+        // it's convenient to copy the price book's name and currency into the individual price sheets (then I don't need to use priceBooks anywhere)
+        for priceSheet in md.priceSheets.getAll() {
+            let priceBook = md.priceBooks[priceSheet.priceBookNid]
+            priceSheet.priceBookName = priceBook.recName
+            priceSheet.currency = priceBook.currency
+        }
+
     }
 
     static func loadAllRecords(md: MobileDownload, tablesByName: [String: table]) {
