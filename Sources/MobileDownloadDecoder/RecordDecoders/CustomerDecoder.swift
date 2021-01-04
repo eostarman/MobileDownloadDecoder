@@ -14,7 +14,7 @@ extension CustomerRecord {
         geographicAreaNid = record.getRecNidOrNil()
         chainNid = record.getRecNidOrNil()
         taxAreaNid = record.getRecNidOrNil()
-        pricingParentNid = record.getRecNidOrNil() ?? recNid
+        pricingParentNid = record.getRecNidOrNil()
 
         whseNid = record.getWhseNid()
         holdCodeNid = record.getRecNidOrNil()
