@@ -11,24 +11,25 @@ extension PriceSheetRecord {
         recNid = record.getRecNidOrZero(0)
         recKey = record.getString(1)
         recName = record.getString(2)
-        priceBookNid = record.getRecNidOrZero(3)
+        priceBookNid = record.getRecNidOrZero(3) // we get the currency and the price-book's name from here
         startDate = record.getDateOrNil(4) ?? .distantPast
         endDate = record.getDateOrNil(5)
-        perCategoryMinimums = record.getBool(6)
+
+        //perCategoryMinimums = record.getBool(6)
         perItemMinimums = record.getBool(7)
-        perPriceSheetMinimums = record.getBool(8)
+        //perPriceSheetMinimums = record.getBool(8)
 
         let nColumns = record.getInt(9)
 
         for i in 0 ..< nColumns {
             var ci = ColumnInfo()
-            ci.columnNotes = record.getString(10 + i * 7 + 0)
+            //ci.columnNotes = record.getString(10 + i * 7 + 0)
             ci.isAutoColumn = record.getBool(10 + i * 7 + 1)
             ci.columnMinimum = record.getInt(10 + i * 7 + 2)
             ci.isCaseMinimum = record.getBool(10 + i * 7 + 3)
-            ci.isMoneyMinimum = record.getBool(10 + i * 7 + 4)
-            ci.isWeightMinimum = record.getBool(10 + i * 7 + 5)
-            ci.basisIndex = record.getInt(10 + i * 7 + 6)
+            //ci.isMoneyMinimum = record.getBool(10 + i * 7 + 4)
+            //ci.isWeightMinimum = record.getBool(10 + i * 7 + 5)
+            //ci.basisIndex = record.getInt(10 + i * 7 + 6)
 
             columInfos[i] = ci
         }
