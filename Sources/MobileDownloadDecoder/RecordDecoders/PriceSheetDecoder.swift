@@ -96,12 +96,12 @@ extension PriceSheetRecord {
         return itemPrices
     }
 
-    static func decodeWarehouseOrCustomerBlob(blob: String) -> [Int: PriceLevel] {
+    static func decodeWarehouseOrCustomerBlob(blob: String) -> [Int: Level] {
         var whseOrCusNid = 0
         var canUseAutomaticColumns = false
         var tempValue = 0
 
-        var priceLevels: [Int: PriceLevel] = [:]
+        var priceLevels: [Int: Level] = [:]
 
         for chr in blob {
             if let digit = chr.wholeNumberValue {
@@ -122,7 +122,7 @@ extension PriceSheetRecord {
                 let priceLevel = tempValue
                 tempValue = 0
 
-                priceLevels[whseOrCusNid] = PriceLevel(priceLevel: priceLevel, canUseAutomaticColumns: canUseAutomaticColumns)
+                priceLevels[whseOrCusNid] = Level(priceLevel: priceLevel, canUseAutomaticColumns: canUseAutomaticColumns)
 
             default:
                 tempValue = 0
