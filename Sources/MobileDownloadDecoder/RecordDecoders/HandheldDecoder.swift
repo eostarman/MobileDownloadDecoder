@@ -285,13 +285,13 @@ extension HandheldRecord {
         syncDate = syncTime.withoutTimeStamp()
     }
 
-    private func decodeExchangeRates(exchangeRatesBlob: String) -> ExchangeRates {
+    private func decodeExchangeRates(exchangeRatesBlob: String) -> ExchangeRatesService {
         if exchangeRatesBlob.isEmpty {
-            return ExchangeRates()
+            return ExchangeRatesService.cachedExchangeRatesService
         }
 
         let tuples = exchangeRatesBlob.components(separatedBy: "|") // see CommonTypes/ExchangeRates.cs
-        var exchangeRates = ExchangeRates()
+        var exchangeRates: [ExchangeRate] = []
         let effectiveDate = syncDate
 
         for tuple in tuples {
@@ -306,12 +306,14 @@ extension HandheldRecord {
                let toCurrency = Currency(rawValue: toCurrencyNid)
             {
                 if rate > 0 {
-                    exchangeRates.add(date: effectiveDate, from: fromCurrency, to: toCurrency, rate: rate)
+                    exchangeRates.append(ExchangeRate(from: fromCurrency, to: toCurrency, date: effectiveDate, rate: rate))
                 }
             }
         }
-
-        return exchangeRates
+        if exchangeRates.isEmpty {
+            return ExchangeRatesService.cachedExchangeRatesService
+        }
+        return ExchangeRatesService(exchangeRates)
     }
 
     static func decodeCompanyItemEntries(fromBlob: String) -> [CompanyItem] {

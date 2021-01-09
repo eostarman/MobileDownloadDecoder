@@ -117,7 +117,7 @@ struct PromoItemDecoder {
                 thruDateOverride = value == 0 ? nil : Date.fromyyyyMMdd(value)
             case chr_i:
                 let itemNid = value
-                var promoItem = PromoItem()
+                let promoItem = PromoItem()
                 promoItem.promoSectionNid = promoSectionNid
                 promoItem.itemNid = itemNid
                 promoItem.isExplicitTriggerItem = isExplicitTriggerItem
