@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MoneyAndExchangeRates
 
 /// This handles a blob that's \t delimited and where each field is a token-character followed immediately by a value (compatible with the c# version called TokenBlob.cs)
 class TokenService {
@@ -21,6 +22,19 @@ class TokenService {
 
         var boolValue: Bool {
             intValue != 0
+        }
+        
+        var money2Value: MoneyWithoutCurrency? {
+            if let value = Int(stringValue) {
+                return MoneyWithoutCurrency(scaledAmount: value, numberOfDecimals: 2)
+            }
+            return nil
+        }
+        var money4Value: MoneyWithoutCurrency? {
+            if let value = Int(stringValue) {
+                return MoneyWithoutCurrency(scaledAmount: value, numberOfDecimals: 4)
+            }
+            return nil
         }
 
         var decimal2Value: Decimal? {

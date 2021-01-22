@@ -16,7 +16,7 @@ extension MobileDownloadDecoderService {
         // TODO: case eToken.VAT:
         // TODO: case eToken.Levy:
 
-        var retailPrice: Decimal?
+        var retailPrice: MoneyWithoutCurrency = .zero
         var buildTo: Int?
         var count: Decimal?
         var routeBookBuildTo: Decimal?
@@ -29,15 +29,15 @@ extension MobileDownloadDecoderService {
         var qtyDeliveryDriverAdjustment: Int = 0
         var qtyLayerRoundingAdjustment: Int = 0 // qtyPalletOptimizationAdjustment
         var crvContainerTypeNid: Int = 0
-        var unitPrice: Decimal = 0
-        var unitDisc: Decimal = 0
-        var unitSplitCaseCharge: Decimal = 0
-        var unitDeposit: Decimal = 0
-        var carrierDeposit: Decimal = 0
-        var bagCredit: Decimal = 0
-        var statePickupCredit: Decimal = 0
-        var unitFreight: Decimal = 0
-        var unitDeliveryCharge: Decimal = 0
+        var unitPrice: MoneyWithoutCurrency = .zero
+        var unitDisc: MoneyWithoutCurrency = .zero
+        var unitSplitCaseCharge: MoneyWithoutCurrency = .zero
+        var unitDeposit: MoneyWithoutCurrency = .zero
+        var carrierDeposit: MoneyWithoutCurrency = .zero
+        var bagCredit: MoneyWithoutCurrency = .zero
+        var statePickupCredit: MoneyWithoutCurrency = .zero
+        var unitFreight: MoneyWithoutCurrency = .zero
+        var unitDeliveryCharge: MoneyWithoutCurrency = .zero
         var pickAndShipDateCodes: String?
         var dateCode: Date?
         var originalQtyShipped: Int?
@@ -64,12 +64,12 @@ extension MobileDownloadDecoderService {
         var CMAOffNid: Int?
         var CTMOffNid: Int?
         var CCFOffNid: Int?
-        var CMAOnAmt: Decimal?
-        var CTMOnAmt: Decimal?
-        var CCFOnAmt: Decimal?
-        var CMAOffAmt: Decimal?
-        var CTMOffAmt: Decimal?
-        var CCFOffAmt: Decimal?
+        var CMAOnAmt: MoneyWithoutCurrency = .zero
+        var CTMOnAmt: MoneyWithoutCurrency = .zero
+        var CCFOnAmt: MoneyWithoutCurrency = .zero
+        var CMAOffAmt: MoneyWithoutCurrency = .zero
+        var CTMOffAmt: MoneyWithoutCurrency = .zero
+        var CCFOffAmt: MoneyWithoutCurrency = .zero
         var commOverrideSlsEmpNid: Int?
         var commOverrideDrvEmpNid: Int?
         var qtyCloseDateRequested: Int?
@@ -83,7 +83,7 @@ extension MobileDownloadDecoderService {
 
             let qtyDiscountedOnThisLine: Int?
 
-            if promo1Nid == 0 || unitDisc == 0 {
+            if promo1Nid == 0 || unitDisc.isZero {
                 qtyDiscountedOnThisLine = nil
             } else {
                 if qtyDiscounted != nil {
@@ -94,7 +94,7 @@ extension MobileDownloadDecoderService {
             }
 
             line.promo1Nid = promo1Nid
-            line.qtyDiscounted = qtyDiscounted
+            line.qtyDiscounted = qtyDiscounted ?? 0
             line.unitDisc = unitDisc
             line.isManualDiscount = isManualDiscount
 
@@ -184,12 +184,12 @@ extension MobileDownloadDecoderService {
             CMAOffNid = nil
             CTMOffNid = nil
             CCFOffNid = nil
-            CMAOnAmt = nil
-            CTMOnAmt = nil
-            CCFOnAmt = nil
-            CMAOffAmt = nil
-            CTMOffAmt = nil
-            CCFOffAmt = nil
+            CMAOnAmt = .zero
+            CTMOnAmt = .zero
+            CCFOnAmt = .zero
+            CMAOffAmt = .zero
+            CTMOffAmt = .zero
+            CCFOffAmt = .zero
             commOverrideSlsEmpNid = nil
             commOverrideDrvEmpNid = nil
             qtyCloseDateRequested = nil
@@ -322,9 +322,9 @@ extension MobileDownloadDecoderService {
             case "DateCode":
                 dateCode = Date.fromDownloadedDate(v[1])
             case "BagCredit":
-                bagCredit = Decimal(string: v[1]) ?? 0
+                bagCredit = MoneyWithoutCurrency(v[1]) ?? .zero
             case "StatePickupCredit":
-                statePickupCredit = Decimal(string: v[1]) ?? 0
+                statePickupCredit = MoneyWithoutCurrency(v[1]) ?? .zero
             case "ToEquipNid":
                 order.toEquipNid = Int(v[1])
             case "IsVendingReplenishment":
@@ -351,17 +351,17 @@ extension MobileDownloadDecoderService {
             case "CCFOffNid":
                 CCFOffNid = Int(v[1])
             case "CMAOnAmt":
-                CMAOnAmt = Decimal(string: v[1])
+                CMAOnAmt = MoneyWithoutCurrency(v[1]) ?? .zero
             case "CTMOnAmt":
-                CTMOnAmt = Decimal(string: v[1])
+                CTMOnAmt = MoneyWithoutCurrency(v[1]) ?? .zero
             case "CCFOnAmt":
-                CCFOnAmt = Decimal(string: v[1])
+                CCFOnAmt = MoneyWithoutCurrency(v[1]) ?? .zero
             case "CMAOffAmt":
-                CMAOffAmt = Decimal(string: v[1])
+                CMAOffAmt = MoneyWithoutCurrency(v[1]) ?? .zero
             case "CTMOffAmt":
-                CTMOffAmt = Decimal(string: v[1])
+                CTMOffAmt = MoneyWithoutCurrency(v[1]) ?? .zero
             case "CCFOffAmt":
-                CCFOffAmt = Decimal(string: v[1])
+                CCFOffAmt = MoneyWithoutCurrency(v[1]) ?? .zero
             case "CommOverrideSlsEmpNid":
                 commOverrideSlsEmpNid = Int(v[1])
             case "CommOverrideDrvEmpNid":
@@ -376,9 +376,9 @@ extension MobileDownloadDecoderService {
             case "ReturnsValidated":
                 order.returnsValidated = true
             case "POAAmount":
-                order.POAAmount = Decimal(string: v[1])
+                order.POAAmount = MoneyWithoutCurrency(v[1]) ?? .zero
             case "POAExpected":
-                order.POAExpected = Decimal(string: v[1])
+                order.POAExpected = MoneyWithoutCurrency(v[1]) ?? .zero
             case "IncludeChargeOrderInTotalDue":
                 order.includeChargeOrderInTotalDue = true
             case "VerifiedPalletLine":
@@ -392,9 +392,9 @@ extension MobileDownloadDecoderService {
             case "DeliverySequence":
                 order.deliverySequence = Int(v[1])
             case "SalesTaxStateB":
-                order.salesTaxStateB = Decimal(string: v[1])
+                order.salesTaxStateB = MoneyWithoutCurrency(v[1]) ?? .zero
             case "SalesTaxStateC":
-                order.salesTaxStateC = Decimal(string: v[1])
+                order.salesTaxStateC = MoneyWithoutCurrency(v[1]) ?? .zero
             case "QtyShippedWhenVoided":
                 qtyShippedWhenVoided = Int(v[1])
             case "PreservePricing":
@@ -428,7 +428,7 @@ extension MobileDownloadDecoderService {
             case .IsEarlyPay:
                 order.isEarlyPay = field.boolValue
             case .EarlyPayDiscountAmt:
-                order.earlyPayDiscountAmt = field.decimal2Value
+                order.earlyPayDiscountAmt = field.money2Value ?? .zero
             case .TermDiscountDays:
                 order.termDiscountDays = field.intValue
             case .TermDiscountPct:
@@ -520,21 +520,21 @@ extension MobileDownloadDecoderService {
             case .OffInvoiceDiscPct:
                 order.offInvoiceDiscPct = field.intValue
             case .DiscountAmt:
-                order.discountAmt = field.decimal4Value
+                order.discountAmt = field.money4Value ?? .zero
             case .TotalTax:
-                order.salesTax = field.decimal4Value
+                order.salesTax = field.money4Value ?? .zero
             case .SalesTaxCounty:
-                order.salesTaxCounty = field.decimal4Value
+                order.salesTaxCounty = field.money4Value ?? .zero
             case .SalesTaxState:
-                order.salesTaxState = field.decimal4Value
+                order.salesTaxState = field.money4Value ?? .zero
             case .SalesTaxLocal:
-                order.salesTaxLocal = field.decimal4Value
+                order.salesTaxLocal = field.money4Value ?? .zero
             case .SalesTaxCity:
-                order.salesTaxCity = field.decimal4Value
+                order.salesTaxCity = field.money4Value ?? .zero
             case .SalesTaxWholesale:
-                order.salesTaxWholesale = field.decimal4Value
+                order.salesTaxWholesale = field.money4Value ?? .zero
             case .TotalFreight:
-                order.totalFreight = field.decimal4Value
+                order.totalFreight = field.money4Value ?? .zero
             case .IsExistingOrder:
                 order.isExistingOrder = field.boolValue
             case .PrintedReviewInvoice:
@@ -549,7 +549,7 @@ extension MobileDownloadDecoderService {
                 // isNewlyAddedItem = field.boolValue
                 break
             case .RetailPrice:
-                retailPrice = field.decimal2Value
+                retailPrice = field.money2Value ?? .zero
             case .EditedRetailPrice:
                 editedRetailPrice = field.boolValue
             case .RetailDateCode: // KJQ 5/11/10 ... only used on mobile devices
@@ -565,19 +565,19 @@ extension MobileDownloadDecoderService {
                 // qtyShippedWhenOpened = field.intValue
                 break
             case .UnitPrice:
-                unitPrice = field.decimal4Value ?? 0
+                unitPrice = field.money4Value ?? .zero
             case .UnitDisc:
-                unitDisc = field.decimal4Value ?? 0
+                unitDisc = field.money4Value ?? .zero
             case .UnitSplitCaseCharge:
-                unitSplitCaseCharge = field.decimal4Value ?? 0
+                unitSplitCaseCharge = field.money4Value ?? .zero
             case .UnitDeposit:
-                unitDeposit = field.decimal4Value ?? 0
+                unitDeposit = field.money4Value ?? .zero
             case .CarrierDeposit:
-                carrierDeposit = field.decimal4Value ?? 0
+                carrierDeposit = field.money4Value ?? .zero
             case .UnitFreight:
-                unitFreight = field.decimal2Value ?? 0
+                unitFreight = field.money2Value ?? .zero
             case .UnitDeliveryCharge:
-                unitDeliveryCharge = field.decimal2Value ?? 0
+                unitDeliveryCharge = field.money2Value ?? .zero
             case .Promo1Nid:
                 promo1Nid = field.intValue
             case .ItemWriteoffNid:
