@@ -147,7 +147,6 @@ public struct MobileDownloadDecoder {
 
     /// After decoding the downloaded data, I make a pass to "fixup" some of the properties in the downloaded records (e.g. price sheets are assigned to price books and price books define the currency for
     /// all of their related price sheets. During pricing, it's more convenient to access the price sheet's currency directly (without needing to look up its price book)
-    /// - Parameter md: <#md description#>
     private static func fixup(md: MobileDownload) {
 
         // some of the information in each customer's retailerInfo object requires info from mobileDownload.retailerListTypes (e.g. which retail locations are

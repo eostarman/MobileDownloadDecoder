@@ -184,20 +184,20 @@ final class MobileDownloadDecoderTests: XCTestCase {
     }
 
     func testPromoItemDecoder() throws {
-        let date = Date.fromyyyyMMdd("20010304") ?? Date.distantPast
-        XCTAssertEqual(date.toLocalTimeDescription(), "2001-03-04 00:00:00")
+        let date = Date.fromyyyyMMdd("20210203") ?? Date.distantPast
+        XCTAssertEqual(date.toLocalTimeDescription(), "2021-02-03 00:00:00")
 
         let blob = "'hi mike'' and Ann'n-12500a20210203r13i"
 
-        let xx = PromoItemDecoder.getPromoItemsAndNote(blob: blob, promoSectionNid: 999)
+        let itemsAndNote = PromoItemDecoder.getPromoItemsAndNote(blob: blob, promoSectionNid: 999)
 
-        XCTAssertEqual(xx.note, "hi mike\' and Ann")
-        let first = xx.promoItems.first!
+        XCTAssertEqual(itemsAndNote.getNote(promoSectionRecNid: 1), "hi mike\' and Ann")
+        let firstPromoItem = itemsAndNote.getPromoItems(promoSectionRecNid: 1, promoDate: date).first!
 
-        XCTAssertEqual(first.itemNid, 13)
-        XCTAssertEqual(first.promoRate, -12500)
-        XCTAssertEqual(first.promoRateType, PromoItem.ePromoRateType.amountOff)
-        XCTAssertEqual(first.thruDateOverride, Date.fromyyyyMMdd("20210203"))
+        XCTAssertEqual(firstPromoItem.itemNid, 13)
+        XCTAssertEqual(firstPromoItem.promoRate, -12500)
+        XCTAssertEqual(firstPromoItem.promoRateType, PromoItem.ePromoRateType.amountOff)
+        XCTAssertEqual(firstPromoItem.thruDateOverride, date)
     }
 
     func testPriceSheetDecoder() throws {
