@@ -8,7 +8,7 @@
 import Foundation
 import MobileDownload
 
-/// The MobileDownload files are encoded in avery tight proprietary (legacy) positional fashion
+/// The MobileDownload files are encoded in a very tight proprietary (legacy) positional fashion
 struct MobileDownloadDecoderService {
     static func decodeSafeMobileString(safeString: String) -> String? {
         if safeString.isEmpty {

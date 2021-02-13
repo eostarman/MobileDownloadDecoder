@@ -10,7 +10,7 @@ extension SplitCaseChargeRecord {
         recKey = record.getString(1)
         recName = record.getString(2)
         amount = record.getAmount2(3)
-        productSetNid = record.getRecNidOrZero(4)
+        productSetNid = record.getRecNidOrNil(4)
         isPerAltPackCharge = record.getBool(5)
         cutoffPrice = record.getAmount2OrNil(6)
         effectiveDate = record.getDateOrNil(7)
