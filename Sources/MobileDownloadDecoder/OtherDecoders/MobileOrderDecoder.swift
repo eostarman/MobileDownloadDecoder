@@ -9,6 +9,13 @@ import Foundation
 import MoneyAndExchangeRates
 import MobileDownload
 
+// this is needed for testing MobileUploadEncoder.encodeMobileOrder()
+public struct MobileOrderDecoder {
+    public static func decodeMobileOrder(blob: String) -> MobileOrder {
+        MobileDownloadDecoderService.decodeMobileOrder(blob: blob)
+    }
+}
+
 extension MobileDownloadDecoderService {
     /// Parse the serialized MobileOrder that's downloaded in MobileDownload; it's a custom token-serialization
     static func decodeMobileOrder(blob: String) -> MobileOrder {
