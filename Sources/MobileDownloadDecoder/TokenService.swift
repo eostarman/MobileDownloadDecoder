@@ -59,7 +59,7 @@ class TokenService {
     init(_ rawFields: [String]) {
         let actualRawFields: [String]
 
-        if rawFields[0] == "Nids" {
+        if rawFields.count >= 1 && rawFields[0] == "Nids" {
             actualRawFields = rawFields[1...].map { String($0) }.filter { !$0.isEmpty }
         } else {
             actualRawFields = rawFields.filter { !$0.isEmpty }
