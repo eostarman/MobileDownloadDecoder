@@ -22,12 +22,12 @@ extension MobileDownloadDecoderService {
         // TODO: line.UnitCRV = databaseCache.GetItemCRV(CustomerInfo, databaseCache.GetItemInfo(line.ItemNid), order.OrderTypeNid);
         // TODO: case eToken.VAT:
         // TODO: case eToken.Levy:
-
-        var retailPrice: MoneyWithoutCurrency = .zero
-        var buildTo: Int?
-        var count: Decimal?
-        var routeBookBuildTo: Decimal?
-        var editedRetailPrice: Bool = false
+        
+        //var retailPrice: MoneyWithoutCurrency = .zero
+        //var buildTo: Int?
+        //var count: Decimal?
+        //var routeBookBuildTo: Decimal?
+        //var editedRetailPrice: Bool = false
         var itemNameOverride: String?
         var qtyOrdered: Int = 0
         var qtyShipped: Int = 0
@@ -46,9 +46,9 @@ extension MobileDownloadDecoderService {
         var unitFreight: MoneyWithoutCurrency = .zero
         var unitDeliveryCharge: MoneyWithoutCurrency = .zero
         var pickAndShipDateCodes: String?
-        var dateCode: Date?
-        var originalQtyShipped: Int?
-        var originalItemWriteoffNid: Int?
+        //var dateCode: Date?
+        //var originalQtyShipped: Int?
+        //var originalItemWriteoffNid: Int?
         var uniqueifier: Int = 0
         var wasDownloaded: Bool = false
         var itemWriteoffNid: Int = 0
@@ -59,12 +59,12 @@ extension MobileDownloadDecoderService {
         var isManualDiscount: Bool = false
         var isManualDeposit: Bool = false
         var basePricesAndPromosOnQtyOrdered: Bool = false
-
+        
         var mergeSequenceTag: Int?
         var autoFreeGoodsLine: Bool = false
         var isPreferredFreeGoodLine: Bool = false
-        var parentOrderedDate: Date?
-        var parentSlsEmpNid: Int?
+        //var parentOrderedDate: Date?
+        //var parentSlsEmpNid: Int?
         var CMAOnNid: Int?
         var CTMOnNid: Int?
         var CCFOnNid: Int?
@@ -84,12 +84,12 @@ extension MobileDownloadDecoderService {
         var qtyShippedWhenVoided: Int?
         var preservePricing: Bool = false
         var noteLink: Int = 0
-
+        
         func getOrderLine(itemNid: Int, seq: Int) -> MobileOrderLine {
             let line = MobileOrderLine()
-
+            
             let qtyDiscountedOnThisLine: Int?
-
+            
             if promo1Nid == 0 || unitDisc.isZero {
                 qtyDiscountedOnThisLine = nil
             } else {
@@ -99,12 +99,12 @@ extension MobileDownloadDecoderService {
                     qtyDiscountedOnThisLine = qtyShipped
                 }
             }
-
+            
             line.promo1Nid = promo1Nid
             line.qtyDiscounted = qtyDiscounted ?? 0
             line.unitDisc = unitDisc
             line.isManualDiscount = isManualDiscount
-
+            
             line.itemNid = itemNid
             line.itemWriteoffNid = itemWriteoffNid
             line.qtyShippedWhenVoided = qtyShippedWhenVoided
@@ -134,19 +134,19 @@ extension MobileDownloadDecoderService {
             line.mergeSequenceTag = mergeSequenceTag
             line.autoFreeGoodsLine = autoFreeGoodsLine
             line.isPreferredFreeGoodLine = isPreferredFreeGoodLine
-            line.originalQtyShipped = originalQtyShipped
-            line.originalItemWriteoffNid = originalItemWriteoffNid
+            //line.originalQtyShipped = originalQtyShipped
+            //line.originalItemWriteoffNid = originalItemWriteoffNid
             line.uniqueifier = uniqueifier
             line.wasDownloaded = wasDownloaded
-            line.retailPrice = retailPrice
-            line.editedRetailPrice = editedRetailPrice
-            line.buildTo = buildTo
-            line.count = count
-            line.routeBookBuildTo = routeBookBuildTo
+            //line.retailPrice = retailPrice
+            //line.editedRetailPrice = editedRetailPrice
+            //line.buildTo = buildTo
+            //line.count = count
+            //line.routeBookBuildTo = routeBookBuildTo
             line.pickAndShipDateCodes = pickAndShipDateCodes
-            line.dateCode = dateCode
-            line.parentSlsEmpNid = parentSlsEmpNid
-            line.parentOrderedDate = parentOrderedDate
+            //line.dateCode = dateCode
+            //line.parentSlsEmpNid = parentSlsEmpNid
+            //line.parentOrderedDate = parentOrderedDate
             line.CMAOnNid = CMAOnNid
             line.CTMOnNid = CTMOnNid
             line.CCFOnNid = CCFOnNid
@@ -166,10 +166,10 @@ extension MobileDownloadDecoderService {
             line.preservePricing = preservePricing
             line.noteLink = noteLink
             line.seq = seq
-
+            
             return line
         }
-
+        
         func resetTokenVariablesAfterAddingOrderLine() {
             qtyBackordered = 0
             isCloseDatedInMarket = false
@@ -180,10 +180,10 @@ extension MobileDownloadDecoderService {
             basePricesAndPromosOnQtyOrdered = false
             wasAutoCut = false
             pickAndShipDateCodes = nil
-            dateCode = nil
-            buildTo = nil
-            count = nil
-            routeBookBuildTo = nil
+            //dateCode = nil
+            //buildTo = nil
+            //count = nil
+            //routeBookBuildTo = nil
             itemNameOverride = nil
             CMAOnNid = nil
             CTMOnNid = nil
@@ -202,229 +202,17 @@ extension MobileDownloadDecoderService {
             qtyCloseDateRequested = nil
             qtyCloseDateShipped = nil
             qtyShippedWhenVoided = nil
-            originalQtyShipped = nil
+            //originalQtyShipped = nil
             preservePricing = false
             noteLink = 0
         }
-
+        
         let order = MobileOrder()
-
-        func processCommaCommand(v: [String]) {
-            switch v[0] {
-            case "DoNotChargeUnitFreight":
-                order.doNotChargeUnitFreight = true
-            case "DoNotChargeUnitDeliveryCharge":
-                order.doNotChargeUnitDeliveryCharge = true
-            case "IgnoreDeliveryTruckRestrictions":
-                order.ignoreDeliveryTruckRestrictions = true
-            case "SignatureVectors":
-                order.signatureVectors = v[1] // SignatureVector.Deserialize(v[1]).ToArray()
-            case "DriverSignatureVectors":
-                order.driverSignatureVectors = v[1] // SignatureVector.Deserialize(v[1]).ToArray()
-            case "PartOrderNumbers":
-                for i in 1 ..< v.count {
-                    if let orderNumber = Int(v[i]) {
-                        order.orderNumbersForPartitioner.append(orderNumber)
-                    }
-                }
-            case "PartDeliveryInfo":
-
-                let isOffScheduleDelivery = v[1] == "1"
-                if let driverNid = Int(v[2]), let deliveryDate = Date.fromDownloadedDate(v[3]) {
-                    let x = MobileOrder.DeliveryInfoForPartitioning(isOffScheduleDelivery: isOffScheduleDelivery, driverNid: driverNid, deliveryDate: deliveryDate)
-                    order.deliveryInfos.append(x)
-                }
-            case "IsOffScheduleDelivery":
-                order.isOffScheduleDelivery = true
-            case "QtyDiscounted":
-                qtyDiscounted = Int(v[1])
-            case "QtyBackordered":
-                qtyBackordered = Int(v[1]) ?? 0
-            case "IsCloseDatedInMarket":
-                isCloseDatedInMarket = true
-            case "IsManualPrice":
-                isManualPrice = true
-            case "IsManualDiscount":
-                isManualDiscount = true
-            case "IsManualDeposit":
-                isManualDeposit = true
-            case "IsManualRebate":
-                // the mobile devices know nothing about supplier rebates, costs, excise taxes and GL Accounts - these are filled-in prior to posting the order into the SQL database (OrderDataLookup.cs in eostarTicket)
-
-                // isManualRebate = true
-                break
-            case "BasePricesAndPromosOnQtyOrdered":
-                basePricesAndPromosOnQtyOrdered = true
-            case "WasAutoCut":
-                wasAutoCut = true
-            case "OriginalQtyShipped":
-                originalQtyShipped = Int(v[1])
-            case "OriginalItemWriteoffNid":
-                originalItemWriteoffNid = Int(v[1])
-            case "Uniqueifier":
-                uniqueifier = Int(v[1]) ?? 0
-            case "WasDownloaded":
-                wasDownloaded = Int(v[1]) ?? 0 != 0
-            case "IsSpecialPaymentTerms":
-                order.isSpecialPaymentTerms = true
-
-            case "PromoDate":
-                order.promoDate = Date.fromDownloadedDate(v[1])
-            case "Authenticated":
-                order.authenticatedDate = Date.fromDownloadedDateTime(v[1])
-                order.authenticatedByNid = Int(v[2])
-            case "Delivered":
-                order.deliveredDate = Date.fromDownloadedDateTime(v[1])
-                order.deliveredByNid = Int(v[2])
-            case "DeliveryDocument":
-                order.deliveryDocumentDate = Date.fromDownloadedDateTime(v[1])
-                order.deliveryDocumentByNid = Int(v[2])
-            case "Dispatched":
-                order.dispatchedDate = Date.fromDownloadedDateTime(v[1])
-                order.dispatchedByNid = Int(v[2])
-            case "EdiInvoice":
-                order.ediInvoiceDate = Date.fromDownloadedDateTime(v[1])
-                order.ediInvoiceByNid = Int(v[2])
-            case "EdiPayment":
-                order.ediPaymentDate = Date.fromDownloadedDateTime(v[1])
-                order.ediPaymentByNid = Int(v[2])
-            case "EdiShipNotice":
-                order.ediShipNoticeDate = Date.fromDownloadedDateTime(v[1])
-                order.ediShipNoticeByNid = Int(v[2])
-            case "Entered":
-                order.enteredDate = Date.fromDownloadedDateTime(v[1])
-                order.enteredByNid = Int(v[2])
-            case "FollowupInvoice":
-                order.followupInvoiceDate = Date.fromDownloadedDateTime(v[1])
-                order.followupInvoiceByNid = Int(v[2])
-            case "Loaded":
-                order.loadedDate = Date.fromDownloadedDateTime(v[1])
-                order.loadedByNid = Int(v[2])
-            case "Ordered":
-                order.orderedDate = Date.fromDownloadedDateTime(v[1])
-            // order.orderedByNid = Int(v[2])*/
-            case "Palletized":
-                order.palletizedDate = Date.fromDownloadedDateTime(v[1])
-                order.palletizedByNid = Int(v[2])
-            case "PickList":
-                order.pickListDate = Date.fromDownloadedDateTime(v[1])
-                order.pickListByNid = Int(v[2])
-            case "Shipped":
-                order.shippedDate = Date.fromDownloadedDateTime(v[1])
-            // order.shippedByNid = Int(v[2])*/
-
-            case "Staged":
-                order.stagedDate = Date.fromDownloadedDateTime(v[1])
-                order.stagedByNid = Int(v[2])
-            case "Verified":
-                order.verifiedDate = Date.fromDownloadedDateTime(v[1])
-                order.verifiedByNid = Int(v[2])
-            case "Voided":
-                order.voidedDate = Date.fromDownloadedDateTime(v[1])
-                order.voidedByNid = Int(v[2])
-            case "LoadNumber":
-                order.loadNumber = Int(v[1])
-            case "PickAndShipDateCodes":
-                pickAndShipDateCodes = v[1 ..< v.count].joined(separator: ",")
-            case "DateCode":
-                dateCode = Date.fromDownloadedDate(v[1])
-            case "BagCredit":
-                bagCredit = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "StatePickupCredit":
-                statePickupCredit = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "ToEquipNid":
-                order.toEquipNid = Int(v[1])
-            case "IsVendingReplenishment":
-                order.isVendingReplenishment = v[1].lowercased() == "true"
-            case "ReplenishmentVendTicketNumber":
-                order.replenishmentVendTicketNumber = Int(v[1])
-            case "IsCoopDeliveryPoint":
-                order.isCoopDeliveryPoint = v[1] == "1"
-            case "CoopCusNid":
-                order.coopCusNid = Int(v[1])
-            case "DoNotOptimizePalletsWithLayerRounding":
-                order.doNotOptimizePalletsWithLayerRounding = v[1] == "1"
-
-            case "CMAOnNid":
-                CMAOnNid = Int(v[1])
-            case "CTMOnNid":
-                CTMOnNid = Int(v[1])
-            case "CCFOnNid":
-                CCFOnNid = Int(v[1])
-            case "CMAOffNid":
-                CMAOffNid = Int(v[1])
-            case "CTMOffNid":
-                CTMOffNid = Int(v[1])
-            case "CCFOffNid":
-                CCFOffNid = Int(v[1])
-            case "CMAOnAmt":
-                CMAOnAmt = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "CTMOnAmt":
-                CTMOnAmt = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "CCFOnAmt":
-                CCFOnAmt = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "CMAOffAmt":
-                CMAOffAmt = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "CTMOffAmt":
-                CTMOffAmt = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "CCFOffAmt":
-                CCFOffAmt = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "CommOverrideSlsEmpNid":
-                commOverrideSlsEmpNid = Int(v[1])
-            case "CommOverrideDrvEmpNid":
-                commOverrideDrvEmpNid = Int(v[1])
-            case "QtyCloseDateRequested":
-                qtyCloseDateRequested = Int(v[1])
-            case "QtyCloseDateShipped":
-                qtyCloseDateShipped = Int(v[1])
-
-            case "PalletLineChange":
-                break // order.handheldDeliveryAdjustments.Add(DeliveryAdjustment.FromBlobForPalletLineChange(v[1]))
-            case "ReturnsValidated":
-                order.returnsValidated = true
-            case "POAAmount":
-                order.POAAmount = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "POAExpected":
-                order.POAExpected = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "IncludeChargeOrderInTotalDue":
-                order.includeChargeOrderInTotalDue = true
-            case "VerifiedPalletLine":
-                break // order.verifiedPalletLines.Add(VerifiedPalletLine.FromBlob(v[1]))
-            case "DeliveryAdjustment":
-                break // order.handheldDeliveryAdjustments.Add(DeliveryAdjustment.FromBlob(v[1]))
-            case "QtyLayerRoundingAdjustment":
-                qtyLayerRoundingAdjustment = Int(v[1]) ?? 0
-            case "CrvContainerTypeNid":
-                crvContainerTypeNid = Int(v[1]) ?? 0
-            case "DeliverySequence":
-                order.deliverySequence = Int(v[1])
-            case "SalesTaxStateB":
-                order.salesTaxStateB = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "SalesTaxStateC":
-                order.salesTaxStateC = MoneyWithoutCurrency(v[1]) ?? .zero
-            case "QtyShippedWhenVoided":
-                qtyShippedWhenVoided = Int(v[1])
-            case "PreservePricing":
-                preservePricing = true
-            case "NoteLink":
-                noteLink = Int(v[1]) ?? 0
-            case "OrderDEXStatus":
-                order.orderDEXStatus = MobileOrder.eOrderDEXStatus(rawValue: Int(v[1]) ?? 0)
-            case "IsForPlanogramReset":
-                order.isForPlanogramReset = true
-            case "ManualHold":
-                order.manualHold = true
-
-            default: break
-            }
-        }
-
-        func processToken(tokenType: MobileOrder.orderTokenType, field: TokenService.Token) {
+        
+        func processToken(tokenType: MobileOrderDecoder.tokenType, field: TokenService.Token) {
+            let csv = field.csv
+            
             switch tokenType {
-            // case .VAT:
-            //     order.VAT = field.decimal4Value
-            // case .Levy:
-            //     order.levy = field.decimal4Value
 
             case .CompanyNid:
                 order.companyNid = field.intValue
@@ -481,9 +269,6 @@ extension MobileDownloadDecoderService {
                 order.toCusNid = field.intValue
             case .DeliveryDate:
                 order.deliveredDate = Date.fromDownloadedDate(field.stringValue)
-            case .EntryTime:
-                // legacyEntryTime = DateTime.ParseExact(field.stringValue, "yyyy-MM-dd HH:mm:ss", null)  - this is a really old token (not used any more) - pre 2011
-                break
             case .PushOffDate:
                 order.pushOffDate = Date.fromDownloadedDate(field.stringValue)
             case .DriverNid:
@@ -552,25 +337,6 @@ extension MobileDownloadDecoderService {
                 qtyShipped = field.intValue
             case .QtyDeliveryDriverAdjustment:
                 qtyDeliveryDriverAdjustment = field.intValue
-            case .IsNewlyAddedItem:
-                // isNewlyAddedItem = field.boolValue
-                break
-            case .RetailPrice:
-                retailPrice = field.money2Value ?? .zero
-            case .EditedRetailPrice:
-                editedRetailPrice = field.boolValue
-            case .RetailDateCode: // KJQ 5/11/10 ... only used on mobile devices
-                // retailDateCode = Date.fromDownloadedDate(field.stringValue)
-                break
-            case .RetailDateCodeQty: // KJQ 5/11/10 ... only used on mobile devices
-                // retailDateCodeQty = field.intValue
-                break
-            case .EditedRetailDateCodeEntry: // KJQ 5/11/10 ... only used on mobile devices
-                // editedRetailDateCodeEntry = field.boolValue
-                break
-            case .QtyShippedWhenOpened: // CDF 1/20/12 ... only used on mobile devices
-                // qtyShippedWhenOpened = field.intValue
-                break
             case .UnitPrice:
                 unitPrice = field.money4Value ?? .zero
             case .UnitDisc:
@@ -591,60 +357,236 @@ extension MobileDownloadDecoderService {
                 itemWriteoffNid = field.intValue
             case .ItemNameOverride:
                 itemNameOverride = field.stringValue
-            case .BuildTo:
-                buildTo = field.intValue
-            case .Count:
-                count = field.decimal2Value
-            case .RouteBookBuildTo:
-                routeBookBuildTo = field.decimal2Value
-            case .ShelfCount:
-                // shelfCount = field.decimal2Value
-                break
-            case .IsNewBuildTo:
-                // isNewBuildTo = field.boolValue
-                break
             case .MergeSequenceTag:
                 mergeSequenceTag = field.intValue
             case .AutoFreeGoodsLine:
                 autoFreeGoodsLine = field.boolValue
             case .IsPreferredFreeGoodLine:
                 isPreferredFreeGoodLine = field.boolValue
-            case .ParentOrderedDate:
-                parentOrderedDate = Date.fromDownloadedDateOrDateTime(field.stringValue)
-            case .ParentSlsEmpNid:
-                parentSlsEmpNid = field.intValue
             case .VoidReasonNid:
                 order.voidReasonNid = field.intValue
-
+                
             case .ItemNid:
                 break
-            case .CommaCommand:
+
+            case .DoNotChargeUnitFreight:
+                order.doNotChargeUnitFreight = true
+            case .DoNotChargeUnitDeliveryCharge:
+                order.doNotChargeUnitDeliveryCharge = true
+            case .IgnoreDeliveryTruckRestrictions:
+                order.ignoreDeliveryTruckRestrictions = true
+            case .SignatureVectors:
+                order.signatureVectors = csv[1] // SignatureVector.Deserialize(v[1]).ToArray()
+            case .DriverSignatureVectors:
+                order.driverSignatureVectors = csv[1] // SignatureVector.Deserialize(v[1]).ToArray()
+            case .PartOrderNumbers:
+                for i in 1 ..< csv.count {
+                    if let orderNumber = Int(csv[i]) {
+                        order.orderNumbersForPartitioner.append(orderNumber)
+                    }
+                }
+            case .PartDeliveryInfo:
+                
+                let isOffScheduleDelivery = csv[1] == "1"
+                if let driverNid = Int(csv[2]), let deliveryDate = Date.fromDownloadedDate(csv[3]) {
+                    let x = MobileOrder.DeliveryInfoForPartitioning(isOffScheduleDelivery: isOffScheduleDelivery, driverNid: driverNid, deliveryDate: deliveryDate)
+                    order.deliveryInfos.append(x)
+                }
+            case .IsOffScheduleDelivery:
+                order.isOffScheduleDelivery = true
+            case .QtyDiscounted:
+                qtyDiscounted = Int(csv[1])
+            case .QtyBackordered:
+                qtyBackordered = Int(csv[1]) ?? 0
+            case .IsCloseDatedInMarket:
+                isCloseDatedInMarket = true
+            case .IsManualPrice:
+                isManualPrice = true
+            case .IsManualDiscount:
+                isManualDiscount = true
+            case .IsManualDeposit:
+                isManualDeposit = true
+            case .IsManualRebate:
+                // the mobile devices know nothing about supplier rebates, costs, excise taxes and GL Accounts - these are filled-in prior to posting the order into the SQL database (OrderDataLookup.cs in eostarTicket)
+                
+                // isManualRebate = true
                 break
+            case .BasePricesAndPromosOnQtyOrdered:
+                basePricesAndPromosOnQtyOrdered = true
+            case .WasAutoCut:
+                wasAutoCut = true
+            //case .OriginalQtyShipped:
+            //    originalQtyShipped = Int(v[1])
+            //case .OriginalItemWriteoffNid:
+            //    originalItemWriteoffNid = Int(v[1])
+            case .Uniqueifier:
+                uniqueifier = Int(csv[1]) ?? 0
+            case .WasDownloaded:
+                wasDownloaded = Int(csv[1]) ?? 0 != 0
+            case .IsSpecialPaymentTerms:
+                order.isSpecialPaymentTerms = true
+                
+            case .PromoDate:
+                order.promoDate = Date.fromDownloadedDate(csv[1])
+            case .Authenticated:
+                order.authenticatedDate = Date.fromDownloadedDateTime(csv[1])
+                order.authenticatedByNid = Int(csv[2])
+            case .Delivered:
+                order.deliveredDate = Date.fromDownloadedDateTime(csv[1])
+                order.deliveredByNid = Int(csv[2])
+            case .DeliveryDocument:
+                order.deliveryDocumentDate = Date.fromDownloadedDateTime(csv[1])
+                order.deliveryDocumentByNid = Int(csv[2])
+            case .Dispatched:
+                order.dispatchedDate = Date.fromDownloadedDateTime(csv[1])
+                order.dispatchedByNid = Int(csv[2])
+            case .EdiInvoice:
+                order.ediInvoiceDate = Date.fromDownloadedDateTime(csv[1])
+                order.ediInvoiceByNid = Int(csv[2])
+            case .EdiPayment:
+                order.ediPaymentDate = Date.fromDownloadedDateTime(csv[1])
+                order.ediPaymentByNid = Int(csv[2])
+            case .EdiShipNotice:
+                order.ediShipNoticeDate = Date.fromDownloadedDateTime(csv[1])
+                order.ediShipNoticeByNid = Int(csv[2])
+            case .Entered:
+                order.enteredDate = Date.fromDownloadedDateTime(csv[1])
+                order.enteredByNid = Int(csv[2])
+            case .FollowupInvoice:
+                order.followupInvoiceDate = Date.fromDownloadedDateTime(csv[1])
+                order.followupInvoiceByNid = Int(csv[2])
+            case .Loaded:
+                order.loadedDate = Date.fromDownloadedDateTime(csv[1])
+                order.loadedByNid = Int(csv[2])
+            case .Ordered:
+                order.orderedDate = Date.fromDownloadedDateTime(csv[1])
+            // order.orderedByNid = Int(v[2])*/
+            case .Palletized:
+                order.palletizedDate = Date.fromDownloadedDateTime(csv[1])
+                order.palletizedByNid = Int(csv[2])
+            case .PickList:
+                order.pickListDate = Date.fromDownloadedDateTime(csv[1])
+                order.pickListByNid = Int(csv[2])
+            case .Shipped:
+                order.shippedDate = Date.fromDownloadedDateTime(csv[1])
+            // order.shippedByNid = Int(v[2])*/
+            
+            case .Staged:
+                order.stagedDate = Date.fromDownloadedDateTime(csv[1])
+                order.stagedByNid = Int(csv[2])
+            case .Verified:
+                order.verifiedDate = Date.fromDownloadedDateTime(csv[1])
+                order.verifiedByNid = Int(csv[2])
+            case .Voided:
+                order.voidedDate = Date.fromDownloadedDateTime(csv[1])
+                order.voidedByNid = Int(csv[2])
+            case .LoadNumber:
+                order.loadNumber = Int(csv[1])
+            case .PickAndShipDateCodes:
+                pickAndShipDateCodes = csv[1 ..< csv.count].joined(separator: ",")
+            case .BagCredit:
+                bagCredit = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .StatePickupCredit:
+                statePickupCredit = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .ToEquipNid:
+                order.toEquipNid = Int(csv[1])
+            case .IsVendingReplenishment:
+                order.isVendingReplenishment = csv[1].lowercased() == "true"
+            case .ReplenishmentVendTicketNumber:
+                order.replenishmentVendTicketNumber = Int(csv[1])
+            case .IsCoopDeliveryPoint:
+                order.isCoopDeliveryPoint = csv[1] == "1"
+            case .CoopCusNid:
+                order.coopCusNid = Int(csv[1])
+            case .DoNotOptimizePalletsWithLayerRounding:
+                order.doNotOptimizePalletsWithLayerRounding = csv[1] == "1"
+                
+            case .CMAOnNid:
+                CMAOnNid = Int(csv[1])
+            case .CTMOnNid:
+                CTMOnNid = Int(csv[1])
+            case .CCFOnNid:
+                CCFOnNid = Int(csv[1])
+            case .CMAOffNid:
+                CMAOffNid = Int(csv[1])
+            case .CTMOffNid:
+                CTMOffNid = Int(csv[1])
+            case .CCFOffNid:
+                CCFOffNid = Int(csv[1])
+            case .CMAOnAmt:
+                CMAOnAmt = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .CTMOnAmt:
+                CTMOnAmt = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .CCFOnAmt:
+                CCFOnAmt = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .CMAOffAmt:
+                CMAOffAmt = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .CTMOffAmt:
+                CTMOffAmt = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .CCFOffAmt:
+                CCFOffAmt = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .CommOverrideSlsEmpNid:
+                commOverrideSlsEmpNid = Int(csv[1])
+            case .CommOverrideDrvEmpNid:
+                commOverrideDrvEmpNid = Int(csv[1])
+            case .QtyCloseDateRequested:
+                qtyCloseDateRequested = Int(csv[1])
+            case .QtyCloseDateShipped:
+                qtyCloseDateShipped = Int(csv[1])
+                
+            case .ReturnsValidated:
+                order.returnsValidated = true
+            case .POAAmount:
+                order.POAAmount = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .POAExpected:
+                order.POAExpected = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .IncludeChargeOrderInTotalDue:
+                order.includeChargeOrderInTotalDue = true
+            case .QtyLayerRoundingAdjustment:
+                qtyLayerRoundingAdjustment = Int(csv[1]) ?? 0
+            case .CrvContainerTypeNid:
+                crvContainerTypeNid = Int(csv[1]) ?? 0
+            case .DeliverySequence:
+                order.deliverySequence = Int(csv[1])
+            case .SalesTaxStateB:
+                order.salesTaxStateB = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .SalesTaxStateC:
+                order.salesTaxStateC = MoneyWithoutCurrency(csv[1]) ?? .zero
+            case .QtyShippedWhenVoided:
+                qtyShippedWhenVoided = Int(csv[1])
+            case .PreservePricing:
+                preservePricing = true
+            case .NoteLink:
+                noteLink = Int(csv[1]) ?? 0
+            case .OrderDEXStatus:
+                order.orderDEXStatus = MobileOrder.eOrderDEXStatus(rawValue: Int(csv[1]) ?? 0)
+            case .IsForPlanogramReset:
+                order.isForPlanogramReset = true
+            case .ManualHold:
+                order.manualHold = true
+                
             }
         }
-
+        
         let tokenizerService = TokenService(blob)
-
+        
         for token in tokenizerService.tokens {
-            guard let tokenType = MobileOrder.orderTokenType.init(rawValue: token.tokenType) else {
+            guard let tokenType = MobileOrderDecoder.tokenType.init(rawValue: token.tokenType) else {
                 continue
             }
-
+            
             switch tokenType {
             case .ItemNid:
                 let itemNid = token.intValue
                 let line = getOrderLine(itemNid: itemNid, seq: order.lines.count)
                 order.lines.append(line)
                 resetTokenVariablesAfterAddingOrderLine()
-
-            case .CommaCommand:
-                processCommaCommand(v: token.stringValue.components(separatedBy: ","))
-
+  
             default:
                 processToken(tokenType: tokenType, field: token)
             }
         }
-
+        
         return order
     }
 }

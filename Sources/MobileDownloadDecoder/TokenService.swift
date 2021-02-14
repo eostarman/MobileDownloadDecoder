@@ -15,6 +15,19 @@ class TokenService {
     struct Token {
         let tokenType: String
         let stringValue: String
+        let csv: [String]
+        
+        init(_ string: String) {
+            if string.hasPrefix(",") {
+                csv = string.dropFirst().components(separatedBy: ",")
+                tokenType = "," + csv[0]
+                stringValue = csv.count >= 2 ? csv[1] : ""
+            } else {
+                tokenType = String(string.prefix(1))
+                stringValue = String(string.dropFirst())
+                csv = stringValue.components(separatedBy: ",")
+            }
+        }
 
         var intValue: Int {
             Int(stringValue) ?? 0
@@ -64,7 +77,7 @@ class TokenService {
         } else {
             actualRawFields = rawFields.filter { !$0.isEmpty }
         }
-        tokens = actualRawFields.map { Token(tokenType: String($0.prefix(1)), stringValue: String($0.dropFirst())) }
+        tokens = actualRawFields.map { Token($0) }
     }
 
     convenience init(_ blob: String) {
