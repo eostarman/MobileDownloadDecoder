@@ -18,6 +18,9 @@ class TokenService {
         let csv: [String]
         
         init(_ string: String) {
+            if string.hasPrefix("A") {
+                let zzz = 1
+            }
             if string.hasPrefix(",") {
                 csv = string.dropFirst().components(separatedBy: ",")
                 tokenType = "," + csv[0]

@@ -134,7 +134,7 @@ extension MobileOrderDecoder {
         case IsManualPrice = ",IsManualPrice"
         case IsManualDiscount = ",IsManualDiscount"
         case IsManualDeposit = ",IsManualDeposit"
-        case IsManualRebate = ",IsManualRebate"
+        //case IsManualRebate = ",IsManualRebate" // the mobile app doesn't know anything about rebates (or costs or G/L accounts)
         case BasePricesAndPromosOnQtyOrdered = ",BasePricesAndPromosOnQtyOrdered"
         case WasAutoCut = ",WasAutoCut"
         case Uniqueifier = ",Uniqueifier"
@@ -199,6 +199,6 @@ extension MobileOrderDecoder {
         case OrderDEXStatus = ",OrderDEXStatus"
         case IsForPlanogramReset = ",IsForPlanogramReset"
         case ManualHold = ",ManualHold"
-
+        case UnitCRV = ",UnitCRV"           // mpr: weirdly, this was *missing* from the c# logic - it would still work as long as the CRV didn't change during the day
     }
 }

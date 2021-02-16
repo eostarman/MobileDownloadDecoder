@@ -40,6 +40,7 @@ extension MobileDownloadDecoderService {
         var unitDisc: MoneyWithoutCurrency = .zero
         var unitSplitCaseCharge: MoneyWithoutCurrency = .zero
         var unitDeposit: MoneyWithoutCurrency = .zero
+        var unitCRV: MoneyWithoutCurrency = .zero
         var carrierDeposit: MoneyWithoutCurrency = .zero
         var bagCredit: MoneyWithoutCurrency = .zero
         var statePickupCredit: MoneyWithoutCurrency = .zero
@@ -85,7 +86,7 @@ extension MobileDownloadDecoderService {
         var preservePricing: Bool = false
         var noteLink: Int = 0
         
-        func getOrderLine(itemNid: Int, seq: Int) -> MobileOrderLine {
+        func getOrderLine(itemNid: Int?, seq: Int) -> MobileOrderLine {
             let line = MobileOrderLine()
             
             let qtyDiscountedOnThisLine: Int?
@@ -100,35 +101,34 @@ extension MobileDownloadDecoderService {
                 }
             }
             
-            line.promo1Nid = promo1Nid
+            line.promo1Nid = promo1Nid == 0 ? nil : promo1Nid
             line.qtyDiscounted = qtyDiscounted ?? 0
             line.unitDisc = unitDisc
             line.isManualDiscount = isManualDiscount
             
             line.itemNid = itemNid
-            line.itemWriteoffNid = itemWriteoffNid
+            line.itemWriteoffNid = itemWriteoffNid == 0 ? nil : itemWriteoffNid
             line.qtyShippedWhenVoided = qtyShippedWhenVoided
             line.qtyShipped = qtyShipped
             line.qtyOrdered = qtyOrdered
-            line.qtyLayerRoundingAdjustment = qtyLayerRoundingAdjustment
-            line.crvContainerTypeNid = crvContainerTypeNid
-            line.qtyDeliveryDriverAdjustment = qtyDeliveryDriverAdjustment
-            line.qtyDeliveryDriverAdjustment = qtyDeliveryDriverAdjustment
+            line.qtyLayerRoundingAdjustment = qtyLayerRoundingAdjustment == 0 ? nil : qtyLayerRoundingAdjustment
+            line.crvContainerTypeNid = crvContainerTypeNid == 0 ? nil : crvContainerTypeNid
+            line.qtyDeliveryDriverAdjustment = qtyDeliveryDriverAdjustment == 0 ? nil : qtyDeliveryDriverAdjustment
             line.itemNameOverride = itemNameOverride
             line.unitPrice = unitPrice
             line.unitSplitCaseCharge = unitSplitCaseCharge
             line.isManualPrice = isManualPrice
             line.unitDeposit = unitDeposit
+            line.unitCRV = unitCRV
             line.isManualDeposit = isManualDeposit
             line.carrierDeposit = carrierDeposit
             line.bagCredit = bagCredit
             line.statePickupCredit = statePickupCredit
             line.unitFreight = unitFreight
             line.unitDeliveryCharge = unitDeliveryCharge
-            line.qtyBackordered = qtyBackordered
+            line.qtyBackordered = qtyBackordered == 0 ? nil : qtyBackordered
             line.qtyDiscountedOnThisLine = qtyDiscountedOnThisLine
             line.isCloseDatedInMarket = isCloseDatedInMarket
-            line.isManualDeposit = isManualDeposit
             line.basePricesAndPromosOnQtyOrdered = basePricesAndPromosOnQtyOrdered
             line.wasAutoCut = wasAutoCut
             line.mergeSequenceTag = mergeSequenceTag
@@ -136,7 +136,7 @@ extension MobileDownloadDecoderService {
             line.isPreferredFreeGoodLine = isPreferredFreeGoodLine
             //line.originalQtyShipped = originalQtyShipped
             //line.originalItemWriteoffNid = originalItemWriteoffNid
-            line.uniqueifier = uniqueifier
+            line.uniqueifier = uniqueifier == 0 ? nil : uniqueifier
             line.wasDownloaded = wasDownloaded
             //line.retailPrice = retailPrice
             //line.editedRetailPrice = editedRetailPrice
@@ -164,7 +164,7 @@ extension MobileDownloadDecoderService {
             line.qtyCloseDateRequested = qtyCloseDateRequested
             line.qtyCloseDateShipped = qtyCloseDateShipped
             line.preservePricing = preservePricing
-            line.noteLink = noteLink
+            line.noteLink = noteLink == 0 ? nil : noteLink
             line.seq = seq
             
             return line
@@ -236,7 +236,6 @@ extension MobileDownloadDecoderService {
                 order.deliveredStatus = field.boolValue
             case .OrderType:
                 order.orderType = MobileOrder.eOrderType.init(rawValue: field.intValue)
-                order.isNewOrder = order.orderType == MobileOrder.eOrderType.FreshOfftruckOrder || order.orderType == MobileOrder.eOrderType.FreshPresellOrder
             case .IsFromDistributor:
                 order.isFromDistributor = field.boolValue
             case .IsToDistributor:
@@ -345,6 +344,8 @@ extension MobileDownloadDecoderService {
                 unitSplitCaseCharge = field.money4Value ?? .zero
             case .UnitDeposit:
                 unitDeposit = field.money4Value ?? .zero
+            case .UnitCRV:
+                unitCRV = MoneyWithoutCurrency(csv[1]) ?? .zero
             case .CarrierDeposit:
                 carrierDeposit = field.money4Value ?? .zero
             case .UnitFreight:
@@ -406,11 +407,6 @@ extension MobileDownloadDecoderService {
                 isManualDiscount = true
             case .IsManualDeposit:
                 isManualDeposit = true
-            case .IsManualRebate:
-                // the mobile devices know nothing about supplier rebates, costs, excise taxes and GL Accounts - these are filled-in prior to posting the order into the SQL database (OrderDataLookup.cs in eostarTicket)
-                
-                // isManualRebate = true
-                break
             case .BasePricesAndPromosOnQtyOrdered:
                 basePricesAndPromosOnQtyOrdered = true
             case .WasAutoCut:
@@ -577,7 +573,7 @@ extension MobileDownloadDecoderService {
             
             switch tokenType {
             case .ItemNid:
-                let itemNid = token.intValue
+                let itemNid = token.intValue == 0 ? nil : token.intValue
                 let line = getOrderLine(itemNid: itemNid, seq: order.lines.count)
                 order.lines.append(line)
                 resetTokenVariablesAfterAddingOrderLine()
