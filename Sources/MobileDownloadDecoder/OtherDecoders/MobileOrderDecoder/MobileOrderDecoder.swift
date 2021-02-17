@@ -8,6 +8,7 @@
 import Foundation
 import MoneyAndExchangeRates
 import MobileDownload
+import MobileLegacyOrder
 
 // this is needed for testing MobileUploadEncoder.encodeMobileOrder()
 public struct MobileOrderDecoder {
